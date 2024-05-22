@@ -6,4 +6,12 @@ export interface IUser extends Document {
     readonly firstName: string;
     readonly secondName: string;
     readonly avatarUrl?: string;
-}
+};
+
+export interface IUserCreate {
+    readonly login: string;
+    readonly passwordHash: string;
+    readonly firstName: string;
+    readonly secondName: string;
+    readonly avatarUrl?: string;
+};
