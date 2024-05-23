@@ -1,10 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from './dto/sign.in.dto';
 import { SignUpDto } from './dto/sign.up.dto';
-import { IUser } from '../users/interfaces/user.interface';
-import * as bcrypt from "bcrypt";
 import { UsersService } from '../users/users.service';
+import { User, UserDocument } from '../users/schemas/user.schema';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -56,7 +56,7 @@ export class AuthService {
         return { token };
     }
     
-    async generateToken(user: IUser) {
+    async generateToken(user: UserDocument) {
         const { _id } = user;
         const token = await this.jwtService.signAsync({ userId: _id });
 

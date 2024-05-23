@@ -1,13 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { USER_MODEL } from './constants';
+import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { IUser, IUserCreate } from './interfaces/user.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from './schemas/user.schema';
 
 @Injectable()
 export class UsersService {
     constructor(
-        @Inject(USER_MODEL)
-        private readonly userModel: Model<IUser>
+        @InjectModel(User.name) private readonly userModel: Model<User> 
     ) {}
 
     async getOneByLogin(login: string) {
@@ -22,7 +21,7 @@ export class UsersService {
         return user;
     }
 
-    async create(data: IUserCreate) {
+    async create(data: User) {
         const user = new this.userModel(data);
         
         return user.save();
