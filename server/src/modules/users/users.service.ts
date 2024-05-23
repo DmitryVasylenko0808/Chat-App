@@ -21,6 +21,16 @@ export class UsersService {
         return user;
     }
 
+    async search(value: string) {
+        const regex = new RegExp(`.*${value}.*`);
+
+        const users = await this.userModel.find({
+            login: { $regex: regex, $options: "i" }
+        }, "-passwordHash");
+
+        return users;
+    }
+
     async create(data: User) {
         const user = new this.userModel(data);
         
