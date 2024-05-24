@@ -2,18 +2,14 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Request } from "express";
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
-import { Socket } from "socket.io";
-import { WsException } from '@nestjs/websockets';
 
 @Injectable()
-export class WsAuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const client = context.switchToWs().getClient<Socket>();
-    const token = this.extractToken(client);
-
-    // console.log(token);
+    const req = context.switchToHttp().getRequest();
+    const token = this.extractToken(req);
 
     if (!token) {
       throw new UnauthorizedException("You are not authorized");
@@ -25,19 +21,16 @@ export class WsAuthGuard implements CanActivate {
         { secret: jwtConstants.secret }
       );
 
-      const req = context.switchToHttp().getRequest();
       req.user = payload;
-    } catch (err) {
-      throw new WsException(err.message);
+    } catch {
+      throw new UnauthorizedException("You are not authorized");
     }
 
     return true;
   }
 
-  private extractToken(client: Socket) {
-    console.log(client.handshake?.headers?.authorization);
-    const queryToken = client.handshake?.headers?.authorization ?? "";
-    const [type, token] = queryToken.split(" ") ?? [];
+  private extractToken(req: Request) {
+    const [type, token] = req.headers.authorization?.split(" ") ?? [];
 
     return type === "Bearer" ? token : null;
   }
