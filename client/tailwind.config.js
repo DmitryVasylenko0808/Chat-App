@@ -5,7 +5,25 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        chat: {
+          gray: {
+            light: "#A0A0A0",
+            normal: "#5F5F5F",
+            strength: "#515151"
+          },
+          blue: {
+            normal: "#00A3FF",
+            active: "#009AF1"
+          },
+          bg: "#E7E7E7"
+        }
+      },
+      maxWidth: {
+        "auth-form": "500px"
+      }
+    },
   },
   plugins: [],
 }
