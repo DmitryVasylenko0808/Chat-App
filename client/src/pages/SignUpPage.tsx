@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignUpMutation } from "../api/auth/authApi";
 import Loader from "../components/Loader";
 import FileSelect from "../components/FileSelect";
+import { useAuth } from "../hooks/useAuth";
 
 const signUpSchema = z
   .object({
@@ -43,6 +44,8 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState<string>("");
 
+  const { authenticate } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -62,7 +65,7 @@ const SignUpPage = () => {
     triggerSignUp({ ...requestData, avatarFile: file })
       .unwrap()
       .then((data) => {
-        localStorage.setItem("token", data.token);
+        authenticate(data.token);
         navigate("/");
       })
       .catch((err) => setRequestError(err.data.message));

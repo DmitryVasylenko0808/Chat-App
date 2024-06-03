@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AUTH_API_URL } from "../../contants/api";
 import { SignInDto } from "./dto/SingInDto";
 import { SignUpDto } from "./dto/SignUpDto";
+import { GetMeDto } from "./dto/GetMeDto";
 
 type SignInParams = {
     login: string;
@@ -45,11 +46,15 @@ export const authApi = createApi({
                     formData: true
                 }
             }
+        }),
+        getMe: builder.query<GetMeDto, void>({
+            query: () => "/me" 
         })
     })
 });
 
 export const {
     useSignInMutation,
-    useSignUpMutation
+    useSignUpMutation,
+    useLazyGetMeQuery
 } = authApi;

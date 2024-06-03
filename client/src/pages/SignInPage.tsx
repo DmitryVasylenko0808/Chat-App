@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useSignInMutation } from "../api/auth/authApi";
 import Loader from "../components/Loader";
+import { useAuth } from "../hooks/useAuth";
 
 const signInSchema = z.object({
   login: z.string().min(1, "Login is required"),
@@ -18,6 +19,8 @@ type SignInFormFeilds = z.infer<typeof signInSchema>;
 const SignInPage = () => {
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState<string>("");
+
+  const { authenticate } = useAuth();
 
   const {
     register,
@@ -33,7 +36,7 @@ const SignInPage = () => {
     triggerSignIn(data)
       .unwrap()
       .then((data) => {
-        localStorage.setItem("token", data.token);
+        authenticate(data.token);
         navigate("/");
       })
       .catch((err) => setRequestError(err.data.message));
