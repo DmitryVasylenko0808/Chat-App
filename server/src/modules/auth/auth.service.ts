@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from './dto/sign.in.dto';
 import { SignUpDto } from './dto/sign.up.dto';
 import { UsersService } from '../users/users.service';
-import { UserDocument } from '../users/schemas/user.schema';
+import { User, UserDocument } from '../users/schemas/user.schema';
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -13,7 +13,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
     
-    async signUp(body: SignUpDto) {
+    async signUp(body: SignUpDto, fileName?: string) {
         const { login, password, firstName, secondName } = body;
 
         const existedUser = await this.userService.getOneByLogin(login);
@@ -23,11 +23,12 @@ export class AuthService {
         }
 
         const hash = await bcrypt.hash(password, 10);
-        const createUserData = {
+        const createUserData: User = {
             login,
             passwordHash: hash,
             firstName,
-            secondName
+            secondName,
+            avatarUrl: fileName
         };
         const user = await this.userService.create(createUserData);
 
@@ -56,9 +57,16 @@ export class AuthService {
         return { token };
     }
     
-    async generateToken(user: UserDocument) {
-        const { _id } = user;
-        const token = await this.jwtService.signAsync({ userId: _id });
+    private async generateToken(user: UserDocument) {
+        const { passwordHash, _id, login, firstName, secondName, avatarUrl } = user;
+
+        const token = await this.jwtService.signAsync({
+            _id,
+            login,
+            firstName,
+            secondName,
+            avatarUrl
+        });
 
         return token;
     }
