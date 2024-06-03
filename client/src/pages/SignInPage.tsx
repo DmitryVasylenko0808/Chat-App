@@ -61,7 +61,7 @@ const SignInPage = () => {
         />
       </div>
       <p className="my-7 text-center text-red-400 text-sm">{requestError}</p>
-      <p className="mb-7 text-chat-gray-strength">
+      <p className="mb-7 text-center text-chat-gray-strength">
         Don't have an account?{" "}
         <Link
           to="/auth/sign-up"
