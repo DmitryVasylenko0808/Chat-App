@@ -10,8 +10,12 @@ async function bootstrap() {
 
   app.setGlobalPrefix("api");
 
-  app.useStaticAssets(join(__dirname, "..", "uploads/avatars"));
-  app.useStaticAssets(join(__dirname, "..", "uploads/none"));
+  app.useStaticAssets(join(__dirname, "..", "uploads/avatars"), {
+    prefix: "/avatars"
+  });
+  app.useStaticAssets(join(__dirname, "..", "uploads/none"), {
+    prefix: "/none"
+  });
 
   await app.listen(3001);
 }
