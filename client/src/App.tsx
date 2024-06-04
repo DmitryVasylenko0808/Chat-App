@@ -8,13 +8,12 @@ import AuthLayout from "./layouts/AuthLayout";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import { useAuth } from "./hooks/useAuth";
+import RequireAuth from "./components/RequireAuth";
 
 function App() {
   const { isAuthenticated, setAuthData } = useAuth();
 
   useEffect(() => {
-    console.log("app");
-
     if (isAuthenticated) {
       setAuthData();
     }
@@ -22,10 +21,12 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<NoChatPage />} />
-        <Route path="/chat/:id" element={<ChatPage />} />
-        <Route path="/chat-create/:receiverId" element={<CreateChatPage />} />
+      <Route element={<RequireAuth />}>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<NoChatPage />} />
+          <Route path="/chat/:id" element={<ChatPage />} />
+          <Route path="/chat-create/:receiverId" element={<CreateChatPage />} />
+        </Route>
       </Route>
       <Route path="auth" element={<AuthLayout />}>
         <Route path="sign-in" element={<SignInPage />} />

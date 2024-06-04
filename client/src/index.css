@@ -7,8 +7,26 @@ html {
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
+
+    color: #515151;
 }
 
 html, body, #root {
     min-height: 100vh;
+}
+
+.active {
+    @apply bg-chat-blue-normal/20
+}
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .no-scrollbar {
+        -ms-overflow-style: none; 
+        scrollbar-width: none; 
+    }
+
 }
