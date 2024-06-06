@@ -1,10 +1,11 @@
 import React from "react";
-import { useAuth } from "../hooks/useAuth";
 
 const NoChatPage = () => {
-  const { logOut } = useAuth();
-
-  return <button onClick={logOut}>NoChatPage</button>;
+  return (
+    <div className="h-full bg-chat-bg flex justify-center items-center">
+      <span className="text-xl text-chat-gray-light">No chat selected</span>
+    </div>
+  );
 };
 
 export default NoChatPage;

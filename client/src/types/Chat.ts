@@ -1,10 +1,4 @@
-type User = {
-    _id: string;
-    login: string;
-    firstName: string;
-    secondName: string;
-    avatarUrl?: string;
-}
+import { User } from "./User";
 
 export type Chat = {
     _id: string;

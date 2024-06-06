@@ -14,7 +14,7 @@ export const useAuth = () => {
     const token = sessionStorage.getItem("token");
     const isAuthenticated = !!token;
 
-    const authenticate = (token: string) => sessionStorage.setItem("token", token);
+    const authenticate = (token: string) => sessionStorage.setItem("token", `Bearer ${token}`);
 
     const logOut = () => {
         sessionStorage.removeItem("token");

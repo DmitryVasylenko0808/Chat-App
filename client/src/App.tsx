@@ -9,30 +9,40 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import { useAuth } from "./hooks/useAuth";
 import RequireAuth from "./components/RequireAuth";
+import { SocketContextProvider } from "./contexts/SocketContext";
 
 function App() {
   const { isAuthenticated, setAuthData } = useAuth();
 
   useEffect(() => {
+    console.log("auth");
+
     if (isAuthenticated) {
       setAuthData();
     }
   }, [isAuthenticated]);
 
+  console.log("app");
+
   return (
-    <Routes>
-      <Route element={<RequireAuth />}>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<NoChatPage />} />
-          <Route path="/chat/:id" element={<ChatPage />} />
-          <Route path="/chat-create/:receiverId" element={<CreateChatPage />} />
+    <SocketContextProvider>
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<NoChatPage />} />
+            <Route path="/chat/:id" element={<ChatPage />} />
+            <Route
+              path="/chat-create/:receiverId"
+              element={<CreateChatPage />}
+            />
+          </Route>
         </Route>
-      </Route>
-      <Route path="auth" element={<AuthLayout />}>
-        <Route path="sign-in" element={<SignInPage />} />
-        <Route path="sign-up" element={<SignUpPage />} />
-      </Route>
-    </Routes>
+        <Route path="auth" element={<AuthLayout />}>
+          <Route path="sign-in" element={<SignInPage />} />
+          <Route path="sign-up" element={<SignUpPage />} />
+        </Route>
+      </Routes>
+    </SocketContextProvider>
   );
 }
 

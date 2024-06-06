@@ -1,14 +1,16 @@
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from "socket.io";
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { MessagesService } from './messages.service';
+import { WsAuthGuard } from '../auth/ws.auth.guard';
 
 @WebSocketGateway({
   cors: {
     origin: "*"
   },
 })
+@UseGuards(WsAuthGuard)
 export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   private readonly logger = new Logger('ChatsGateway');
@@ -26,22 +28,45 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   }
 
   handleConnection(client: Socket) {
-    const userId = client.handshake.query.userId as string;
-
-    this.usersMap.set(userId, client.id);
+    console.log("Connected");
   }
 
   handleDisconnect(client: Socket) {
-    const userId = client.handshake.query.userId as string;
+    let userId: string;
 
+    for(const [k, v] of this.usersMap.entries()) {
+      if (v === client.id) {
+        userId = k;
+
+        break;
+      }
+    }
+    
     this.usersMap.delete(userId);
+
+    console.log("DisConnected", this.usersMap);
+  }
+
+  @SubscribeMessage("user:online") 
+  handleUserOnline(client: Socket) {
+    const userId = client["userId"];
+
+    this.usersMap.set(userId, client.id);
+    
+    console.log("users", this.usersMap);
   }
 
   @SubscribeMessage("chats:get") 
   async handleGetChats(client: Socket) {
-    const userId = client.handshake.query.userId as string;
+    // const userId = client.handshake.query.userId as string;
+
+    const userId = client["userId"];
+
+    console.log("chats", userId);
 
     const chats = await this.chatsService.get(userId);
+
+    console.log(chats);;
 
     client.emit("chats", chats);
   }
@@ -49,6 +74,8 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   @SubscribeMessage("chats:join")
   async handleJoinChat(client: Socket, payload: { chatId: string }) {
     const chat = await this.chatsService.getById(payload.chatId);
+
+    console.log(payload.chatId);
     
     if (!chat) {
       client.emit("error", "Error");

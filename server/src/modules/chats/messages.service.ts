@@ -11,7 +11,7 @@ export class MessagesService {
     ) {}
 
     async get(chatId: string) {
-        const messages = await this.messageModel.find({ chat: chatId });
+        const messages = await this.messageModel.find({ chat: chatId }).populate("sender", "-passwordHash");
 
         return messages;
     }

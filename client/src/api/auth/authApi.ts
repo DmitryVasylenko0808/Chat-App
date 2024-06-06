@@ -22,7 +22,7 @@ export const authApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: AUTH_API_URL,
         prepareHeaders: (headers) => {
-            headers.set("authorization", `Bearer ${localStorage.getItem("token")}`)
+            headers.set("authorization", `${sessionStorage.getItem("token")}`)
         }
     }),
     endpoints: builder => ({

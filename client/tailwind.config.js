@@ -22,7 +22,7 @@ export default {
         }
       },
       width: {
-        "sidebar": "390px"
+        "sidebar": "500px"
       },
       height: {
         chatList: "720px"

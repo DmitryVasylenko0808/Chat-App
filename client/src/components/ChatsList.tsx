@@ -1,24 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import ChatItem from "./ChatItem";
 import { SocketContext } from "../contexts/SocketContext";
-import { Chat } from "../types/Chat";
 
 const ChatsList = () => {
-  const socket = useContext(SocketContext);
-
-  const [chats, setChats] = useState<Chat[]>([]);
-
-  useEffect(() => {
-    if (socket) {
-      socket.emit("chats:get");
-
-      socket.on("chats", (data: Chat[]) => setChats(data));
-    }
-
-    return () => {
-      socket?.off("chats");
-    };
-  }, [socket]);
+  const context = useContext(SocketContext);
 
   return (
     <div className="">
@@ -26,7 +11,7 @@ const ChatsList = () => {
         All messages
       </h2>
       <div className="flex flex-col h-chatList overflow-y-scroll no-scrollbar">
-        {chats.map((c) => (
+        {context?.chats.map((c) => (
           <ChatItem data={c} key={c._id} />
         ))}
       </div>
