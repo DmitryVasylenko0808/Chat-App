@@ -9,7 +9,7 @@ type SearchListProps = {
 
 const SearchList = ({ data }: SearchListProps) => {
   return (
-    <div className="absolute top-full left-0 z-10 w-full bg-white flex flex-col">
+    <div className="absolute top-full left-0 z-10 w-full border-x border-b bg-white flex flex-col">
       {data.map((item) => (
         <Link
           to={`/chat-create/${item._id}`}
