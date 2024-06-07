@@ -26,8 +26,12 @@ const MessageItem = ({ data }: MessageItemProps) => {
     "flex-row-reverse 2xl:flex-row": isFromMe,
   });
 
+  const messageParentBoxClassName = clsx("flex justify-start", {
+    "justify-end 2xl:justify-start": isFromMe,
+  });
+
   const messageBoxClassName = clsx(
-    "px-6 py-4 2xl:rounded-xl 2xl:rounded-tl-none font-light text-lg",
+    "px-6 py-4 inline-block 2xl:rounded-xl 2xl:rounded-tl-none font-light text-lg",
     {
       "bg-chat-blue-normal text-white rounded-xl rounded-tr-none": isFromMe,
       "bg-white rounded-xl rounded-tl-none": !isFromMe,
@@ -50,7 +54,9 @@ const MessageItem = ({ data }: MessageItemProps) => {
             <ReactTimeAgo date={data.createdAt} updateInterval={60} />
           </span>
         </div>
-        <div className={messageBoxClassName}>{data.body}</div>
+        <div className={messageParentBoxClassName}>
+          <div className={messageBoxClassName}>{data.body}</div>
+        </div>
       </div>
     </div>
   );
