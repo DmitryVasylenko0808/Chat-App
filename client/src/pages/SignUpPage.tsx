@@ -126,7 +126,7 @@ const SignUpPage = () => {
         </Link>
       </p>
 
-      <Button type="submit" disabled={isLoading}>
+      <Button size="full" type="submit" disabled={isLoading}>
         {isLoading ? <Loader /> : "Sign Up"}
       </Button>
     </form>

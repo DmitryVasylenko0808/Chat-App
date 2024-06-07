@@ -12,6 +12,7 @@ export type SocketContextState = {
   joinChat: (chatId: string) => void;
   leaveChat: (chatId: string) => void;
   getMessages: (chatid: string) => void;
+  sendMessage: (data: { chatId: string; body: string }) => void;
 };
 
 export const SocketContext = createContext<SocketContextState | null>(null);
@@ -23,7 +24,7 @@ type SocketContextProviderProps = {
 export const SocketContextProvider = ({
   children,
 }: SocketContextProviderProps) => {
-  const { user, token } = useAuth();
+  const { token } = useAuth();
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChat, setCurrentChat] = useState<Chat>();
@@ -78,9 +79,21 @@ export const SocketContextProvider = ({
     socket.current?.emit("messages:get", { chatId });
   };
 
+  const sendMessage = (data: { chatId: string; body: string }) => {
+    socket.current?.emit("messages:send", data);
+  };
+
   return (
     <SocketContext.Provider
-      value={{ chats, currentChat, messages, joinChat, leaveChat, getMessages }}
+      value={{
+        chats,
+        currentChat,
+        messages,
+        joinChat,
+        leaveChat,
+        getMessages,
+        sendMessage,
+      }}
     >
       {children}
     </SocketContext.Provider>

@@ -26,10 +26,13 @@ const MessageItem = ({ data }: MessageItemProps) => {
     "flex-row-reverse 2xl:flex-row": isFromMe,
   });
 
-  const messageBoxClassName = clsx("px-6 py-4 rounded-xl font-light text-lg", {
-    "bg-chat-blue-normal text-white": isFromMe,
-    "bg-white": !isFromMe,
-  });
+  const messageBoxClassName = clsx(
+    "px-6 py-4 2xl:rounded-xl 2xl:rounded-tl-none font-light text-lg",
+    {
+      "bg-chat-blue-normal text-white rounded-xl rounded-tr-none": isFromMe,
+      "bg-white rounded-xl rounded-tl-none": !isFromMe,
+    }
+  );
 
   return (
     <div className={messageContainerClassName}>

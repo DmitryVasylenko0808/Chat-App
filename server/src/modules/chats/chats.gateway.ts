@@ -96,7 +96,7 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
   @SubscribeMessage("chats:create")
   async handleCreateChat(client: Socket, payload: { receiverId: string, message: string }) {
-    const userId = client.handshake.query.userId as string;
+    const userId = client["userId"];
     const { receiverId, message } = payload;
 
     const chat = await this.chatsService.create(userId, receiverId);
@@ -118,7 +118,7 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
   @SubscribeMessage("messages:send")
   async handleSendMessage(client: Socket, payload: { chatId: string, body: string }) {
-    const senderId = client.handshake.query.userId as string;
+    const senderId = client["userId"];
     const { chatId, body } = payload;
 
     const chat = await this.chatsService.getById(chatId);

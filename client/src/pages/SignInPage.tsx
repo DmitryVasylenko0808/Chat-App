@@ -73,7 +73,7 @@ const SignInPage = () => {
           Sign Up
         </Link>
       </p>
-      <Button type="submit" disabled={isLoading}>
+      <Button size="full" type="submit" disabled={isLoading}>
         {isLoading ? <Loader /> : "Sign In"}
       </Button>
     </form>

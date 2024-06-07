@@ -8,7 +8,7 @@ type MessagesListProps = {
 
 const MessagesList = ({ messages }: MessagesListProps) => {
   return (
-    <div className="px-12 py-4 flex flex-col space-y-5 overflow-y-scroll no-scrollbar">
+    <div className="flex-1 px-12 py-4 flex flex-col space-y-5 overflow-y-scroll no-scrollbar">
       {messages.map((m) => (
         <MessageItem data={m} key={m._id} />
       ))}
