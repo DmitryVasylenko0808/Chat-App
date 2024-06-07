@@ -14,6 +14,7 @@ const SearchList = ({ data }: SearchListProps) => {
         <Link
           to={`/chat-create/${item._id}`}
           className="py-3 px-6 flex items-center gap-4 hover:bg-chat-blue-normal/20"
+          key={item._id}
         >
           <img
             src={
