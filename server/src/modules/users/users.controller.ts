@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -8,7 +8,10 @@ export class UsersController {
 
     @Get("search")
     @UseGuards(AuthGuard)
-    async search(@Query() query: { value: string }) {
-        return await this.userService.search(query.value);
+    async search(
+        @Request() req,
+        @Query() query: { value: string }
+    ) {
+        return await this.userService.search(query.value, req.user.login);
     }
 }

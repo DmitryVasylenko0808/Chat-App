@@ -15,14 +15,10 @@ function App() {
   const { isAuthenticated, setAuthData } = useAuth();
 
   useEffect(() => {
-    console.log("auth");
-
     if (isAuthenticated) {
       setAuthData();
     }
   }, [isAuthenticated]);
-
-  console.log("app");
 
   return (
     <SocketContextProvider>

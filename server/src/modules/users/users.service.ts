@@ -21,11 +21,16 @@ export class UsersService {
         return user;
     }
 
-    async search(value: string) {
+    async search(value: string, userLogin: string) {
         const regex = new RegExp(`.*${value}.*`);
 
+        console.log(userLogin);
+
         const users = await this.userModel.find({
-            login: { $regex: regex, $options: "i" }
+            $and: [
+                { login: { $regex: regex, $options: "i" } },
+                { login: { $ne: userLogin } }
+            ]
         }, "-passwordHash");
 
         return users;
