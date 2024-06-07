@@ -4,24 +4,24 @@ import { SocketContext } from "../contexts/SocketContext";
 import ChatHeader from "../components/ChatHeader";
 import MessagesList from "../components/MessagesList";
 import AddMessage from "../components/AddMessage";
+import { useAuth } from "../hooks/useAuth";
 
 const ChatPage = () => {
   const { id } = useParams();
+  const { user } = useAuth();
 
   const context = useContext(SocketContext);
 
   useEffect(() => {
     if (id) {
-      console.log("joning chat", id);
       context?.joinChat(id);
       context?.getMessages(id);
     }
 
     return () => {
-      console.log("Leavig chat", id);
       context?.leaveChat(id!);
     };
-  }, [id]); // null after refresh page !!!
+  }, [id, user]);
 
   return (
     <div className="h-full bg-chat-bg flex flex-col">

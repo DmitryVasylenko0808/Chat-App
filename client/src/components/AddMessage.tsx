@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Button from "./Button";
 import { useParams } from "react-router";
 import { z } from "zod";
@@ -17,14 +17,18 @@ const AddMessage = () => {
 
   const context = useContext(SocketContext);
 
-  const { register, handleSubmit } = useForm<AddMessageFields>({
+  const { register, handleSubmit, reset } = useForm<AddMessageFields>({
     resolver: zodResolver(sendMessageSchema),
   });
 
+  useEffect(() => {
+    reset();
+  }, [id]);
+
   const submitHandler = (data: AddMessageFields) => {
     if (id) {
-      console.log({ ...data, chatId: id });
       context?.sendMessage({ ...data, chatId: id });
+      reset();
     }
   };
 
