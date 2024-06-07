@@ -6,4 +6,4 @@ export type User = {
     avatarUrl?: string;
 }
 
-export type SearchUsersDto = User[];
+export type GetUserByIdDto = User;

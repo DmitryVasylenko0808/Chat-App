@@ -104,7 +104,9 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     
     await this.messagesService.create(chatId, userId, message);
 
-    this.updateChats(userId, receiverId);    
+    this.updateChats(userId, receiverId);   
+    
+    client.emit("chats:created", chatId);
   }
 
   @SubscribeMessage("messages:get")

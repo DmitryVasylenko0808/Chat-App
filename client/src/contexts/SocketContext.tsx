@@ -3,6 +3,7 @@ import { Socket, io } from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
 import { Chat } from "../types/Chat";
 import { Message } from "../types/Message";
+import { useNavigate } from "react-router";
 
 export type SocketContextState = {
   chats: Chat[];
@@ -13,6 +14,7 @@ export type SocketContextState = {
   leaveChat: (chatId: string) => void;
   getMessages: (chatid: string) => void;
   sendMessage: (data: { chatId: string; body: string }) => void;
+  createChat: (data: { receiverId: string; message: string }) => void;
 };
 
 export const SocketContext = createContext<SocketContextState | null>(null);
@@ -24,6 +26,8 @@ type SocketContextProviderProps = {
 export const SocketContextProvider = ({
   children,
 }: SocketContextProviderProps) => {
+  const navigate = useNavigate();
+
   const { token } = useAuth();
 
   const [chats, setChats] = useState<Chat[]>([]);
@@ -36,6 +40,8 @@ export const SocketContextProvider = ({
     const handleGetChats = (data: Chat[]) => setChats(data);
     const handleGetOneChat = (data: Chat) => setCurrentChat(data);
     const handleGetMessages = (data: Message[]) => setMessages(data);
+
+    const handleCreatedChat = (chatId: string) => navigate(`/chat/${chatId}`);
 
     if (token) {
       socket.current = io("http://localhost:3001", {
@@ -54,14 +60,15 @@ export const SocketContextProvider = ({
 
       socket.current.on("chats:joined", handleGetOneChat);
       socket.current.on("messages", handleGetMessages);
-    }
 
-    // console.log("context-effect", socket, user);
+      socket.current.on("chats:created", handleCreatedChat);
+    }
 
     return () => {
       socket.current?.off("chats", handleGetChats);
       socket.current?.off("chats:joined", handleGetOneChat);
       socket.current?.off("messages", handleGetMessages);
+      socket.current?.off("chats:created");
 
       socket.current?.disconnect();
     };
@@ -83,6 +90,10 @@ export const SocketContextProvider = ({
     socket.current?.emit("messages:send", data);
   };
 
+  const createChat = (data: { receiverId: string; message: string }) => {
+    socket.current?.emit("chats:create", data);
+  };
+
   return (
     <SocketContext.Provider
       value={{
@@ -93,6 +104,7 @@ export const SocketContextProvider = ({
         leaveChat,
         getMessages,
         sendMessage,
+        createChat,
       }}
     >
       {children}
