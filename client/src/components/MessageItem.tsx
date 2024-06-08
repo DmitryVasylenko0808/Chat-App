@@ -1,9 +1,10 @@
 import React from "react";
 import { Message } from "../types/Message";
 import { useAuth } from "../hooks/useAuth";
+import { useTheme } from "../hooks/useTheme";
 import ReactTimeAgo from "react-time-ago";
-import { IMAGES_URL, NULL_IMAGES_URL } from "../contants/api";
 import clsx from "clsx";
+import { IMAGES_URL, NULL_IMAGES_URL } from "../contants/api";
 
 type MessageItemProps = {
   data: Message;
@@ -11,6 +12,7 @@ type MessageItemProps = {
 
 const MessageItem = ({ data }: MessageItemProps) => {
   const { user } = useAuth();
+  const { theme } = useTheme();
 
   const senderAvatarSrc = data.sender?.avatarUrl
     ? `${IMAGES_URL}/${data.sender.avatarUrl}`
@@ -24,6 +26,7 @@ const MessageItem = ({ data }: MessageItemProps) => {
 
   const messageMetaClassName = clsx("mb-3 flex items-center gap-4", {
     "flex-row-reverse 2xl:flex-row": isFromMe,
+    "text-white": theme === "dark",
   });
 
   const messageParentBoxClassName = clsx("flex justify-start", {
@@ -34,7 +37,9 @@ const MessageItem = ({ data }: MessageItemProps) => {
     "px-6 py-4 inline-block 2xl:rounded-xl 2xl:rounded-tl-none font-light text-lg",
     {
       "bg-chat-blue-normal text-white rounded-xl rounded-tr-none": isFromMe,
-      "bg-white rounded-xl rounded-tl-none": !isFromMe,
+      "rounded-xl rounded-tl-none": !isFromMe,
+      "bg-white": !isFromMe && theme === "light",
+      "bg-[#3b3b3b] text-white": !isFromMe && theme === "dark",
     }
   );
 
@@ -42,7 +47,7 @@ const MessageItem = ({ data }: MessageItemProps) => {
     <div className={messageContainerClassName}>
       <img
         src={senderAvatarSrc}
-        className="w-12 h-12 rounded-full"
+        className="w-12 h-12 rounded-full bg-[#3b3b3b]"
         alt="none"
       />
       <div className="">

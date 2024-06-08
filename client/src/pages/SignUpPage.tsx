@@ -9,6 +9,8 @@ import { useSignUpMutation } from "../api/auth/authApi";
 import Loader from "../components/Loader";
 import FileSelect from "../components/FileSelect";
 import { useAuth } from "../hooks/useAuth";
+import clsx from "clsx";
+import { useTheme } from "../hooks/useTheme";
 
 const signUpSchema = z
   .object({
@@ -41,6 +43,8 @@ const signUpSchema = z
 type SignUpFormFields = z.infer<typeof signUpSchema>;
 
 const SignUpPage = () => {
+  const { theme } = useTheme();
+
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState<string>("");
 
@@ -71,14 +75,18 @@ const SignUpPage = () => {
       .catch((err) => setRequestError(err.data.message));
   };
 
+  const formClassName = clsx("w-full max-w-auth-form p-8 border-2 rounded-xl", {
+    "border-chat-dark-border": theme === "dark",
+  });
+
+  const headingClassName = clsx("mb-7 text-center text-2xl font-semibold", {
+    "text-chat-gray-strength": theme === "light",
+    "text-white": theme === "dark",
+  });
+
   return (
-    <form
-      className="w-full max-w-auth-form p-8 border-2 rounded-xl"
-      onSubmit={handleSubmit(submitHandler)}
-    >
-      <h2 className="mb-7 text-center text-2xl text-chat-gray-strength font-semibold">
-        Sign Up
-      </h2>
+    <form className={formClassName} onSubmit={handleSubmit(submitHandler)}>
+      <h2 className={headingClassName}>Sign Up</h2>
       <div className="mb-6 flex flex-col gap-3">
         <TextField
           {...register("login")}

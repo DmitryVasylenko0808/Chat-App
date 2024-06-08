@@ -10,15 +10,23 @@ import SignUpPage from "./pages/SignUpPage";
 import { useAuth } from "./hooks/useAuth";
 import RequireAuth from "./components/RequireAuth";
 import { SocketContextProvider } from "./contexts/SocketContext";
+import { useTheme } from "./hooks/useTheme";
 
 function App() {
   const { isAuthenticated, setAuthData } = useAuth();
+  const { savedTheme, setCurrentTheme } = useTheme();
 
   useEffect(() => {
     if (isAuthenticated) {
       setAuthData();
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (savedTheme) {
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
 
   return (
     <SocketContextProvider>

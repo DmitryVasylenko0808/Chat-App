@@ -4,10 +4,12 @@ import { authApi } from "../api/auth/authApi";
 import authSlice from "./slices/authSlice";
 import { usersApi } from "../api/users/usersApi";
 import { chatsApi } from "../api/chats/chatsApi";
+import themeSlice from "./slices/themeSlice";
 
 export const store = configureStore({
     reducer: {
         auth: authSlice,
+        theme: themeSlice,
         [authApi.reducerPath]: authApi.reducer,
         [usersApi.reducerPath]: usersApi.reducer,
         [chatsApi.reducerPath]: chatsApi.reducer

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 
 export type SocketContextState = {
   chats: Chat[];
-  currentChat?: Chat;
+  currentChat?: Chat | null;
   messages?: Message[];
 
   joinChat: (chatId: string) => void;
@@ -31,7 +31,7 @@ export const SocketContextProvider = ({
   const { token } = useAuth();
 
   const [chats, setChats] = useState<Chat[]>([]);
-  const [currentChat, setCurrentChat] = useState<Chat>();
+  const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const socket = useRef<Socket | null>(null);
@@ -80,6 +80,7 @@ export const SocketContextProvider = ({
 
   const leaveChat = (chatId: string) => {
     socket.current?.emit("chats:leave", { chatId });
+    setCurrentChat(null);
   };
 
   const getMessages = (chatId: string) => {
