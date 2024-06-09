@@ -12,8 +12,6 @@ export class WsAuthGuard implements CanActivate {
     const client: Socket = context.switchToWs().getClient();
     const token = this.extractToken(client);
 
-    console.log("guard", token);
-
     if (!token) {
       throw new WsException('Unauthorized');
     }

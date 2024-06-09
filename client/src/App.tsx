@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useAuth } from "./hooks/useAuth";
+import { useTheme } from "./hooks/useTheme";
+import { SocketContextProvider } from "./contexts/SocketContext";
 import { Routes, Route } from "react-router";
 import MainLayout from "./layouts/MainLayout";
 import NoChatPage from "./pages/NoChatPage";
@@ -7,10 +10,7 @@ import CreateChatPage from "./pages/CreateChatPage";
 import AuthLayout from "./layouts/AuthLayout";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-import { useAuth } from "./hooks/useAuth";
 import RequireAuth from "./components/RequireAuth";
-import { SocketContextProvider } from "./contexts/SocketContext";
-import { useTheme } from "./hooks/useTheme";
 
 function App() {
   const { isAuthenticated, setAuthData } = useAuth();
