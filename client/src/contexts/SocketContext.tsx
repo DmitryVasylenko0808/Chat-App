@@ -6,6 +6,7 @@ import { Message } from "../types/Message";
 import { useNavigate } from "react-router";
 
 export type SocketContextState = {
+  onlineUsers: string[];
   chats: Chat[];
   currentChat?: Chat | null;
   messages?: Message[];
@@ -30,6 +31,7 @@ export const SocketContextProvider = ({
 
   const { token } = useAuth();
 
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -37,6 +39,10 @@ export const SocketContextProvider = ({
   const socket = useRef<Socket | null>(null);
 
   useEffect(() => {
+    const handleGetOnlineUsers = (data: string[]) => {
+      console.log(data);
+      setOnlineUsers(data);
+    };
     const handleGetChats = (data: Chat[]) => setChats(data);
     const handleGetOneChat = (data: Chat) => setCurrentChat(data);
     const handleGetMessages = (data: Message[]) => setMessages(data);
@@ -54,6 +60,7 @@ export const SocketContextProvider = ({
       socket.current.connect();
 
       socket.current.emit("user:online");
+      socket.current.on("users", handleGetOnlineUsers);
 
       socket.current.emit("chats:get");
       socket.current.on("chats", handleGetChats);
@@ -65,6 +72,7 @@ export const SocketContextProvider = ({
     }
 
     return () => {
+      socket.current?.off("users", handleGetOnlineUsers);
       socket.current?.off("chats", handleGetChats);
       socket.current?.off("chats:joined", handleGetOneChat);
       socket.current?.off("messages", handleGetMessages);
@@ -98,6 +106,7 @@ export const SocketContextProvider = ({
   return (
     <SocketContext.Provider
       value={{
+        onlineUsers,
         chats,
         currentChat,
         messages,

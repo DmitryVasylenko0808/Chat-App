@@ -43,7 +43,7 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     }
     
     this.usersMap.delete(userId);
-
+    this.updateOnlineUsers();
     console.log("DisConnected", this.usersMap);
   }
 
@@ -52,21 +52,14 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     const userId = client["userId"];
 
     this.usersMap.set(userId, client.id);
-    
-    console.log("users", this.usersMap);
+    this.updateOnlineUsers();
   }
 
   @SubscribeMessage("chats:get") 
   async handleGetChats(client: Socket) {
-    // const userId = client.handshake.query.userId as string;
-
     const userId = client["userId"];
 
-    console.log("chats", userId);
-
     const chats = await this.chatsService.get(userId);
-
-    console.log(chats);;
 
     client.emit("chats", chats);
   }
@@ -134,6 +127,12 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     await this.messagesService.create(chatId, senderId, body);
 
     this.updateMessages(chatId)
+  }
+
+  private updateOnlineUsers = () => {
+    const userIds = [...this.usersMap.keys()];
+
+    this.wss.emit("users", userIds);
   }
 
   private async updateChats(userId: string, receiverId: string) {
